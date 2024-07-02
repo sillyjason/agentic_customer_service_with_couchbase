@@ -1,0 +1,122 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agentic Customer Support with Couchbase</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+       
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: Monospace;
+        }
+        
+        #header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #chatbox {
+            height: calc(100% - 100px);
+            overflow-y: scroll;
+            padding: 10px;
+            left: 3%;
+            right: 3%;
+            width: 94%;
+            bottom: 50px;
+            max-height: calc(100vh - 200px); /* Adjust this value as needed */
+            overflow-y: auto;
+        }
+        
+        .user-message {
+            text-align: right;
+            background-color: beige;
+            border-radius: 10px;
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            width: 50%;
+            align-self: flex-end;
+            margin-left: auto; /* Added */
+            font-family: Monospace;
+        }
+        
+        .system-message {
+            text-align: left;
+            background-color: lightblue; /* Updated */
+            border-radius: 10px;
+            padding: 5px 10px;
+            margin-bottom: 10px;
+            width: 50%;
+            align-self: flex-start; /* Updated */
+            font-family: Monospace;
+        }
+
+        #message-container {
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            bottom: 20px;
+            left: 5%;
+            right: 5%;
+            width: 90%;
+        }
+        
+        #message {
+            flex: 1;
+            padding: 5px;
+            margin-right: 10px;
+            font-family: Monospace;
+        }
+        
+        #send {
+            padding: 5px 10px;
+            font-family: Monospace;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">Agentic Customer Support with Couchbase</div>
+    <div id="chatbox"> </div>
+    <div id="message-container">
+        <input id="message" type="text" onkeydown="if(event.keyCode===13) document.getElementById('send').click()"> <!-- Updated -->
+        <button id="send">Send</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:5001');
+        var lastTimestamp = null;
+
+        socket.on('response', function(msg) {
+            console.log("received response,", msg)
+            const { message, run_id, run_url } = msg;
+
+            $('#chatbox').append($('<p class="system-message"></p>').html(message.replace(/\n/g, '<br>')));
+
+            // add a text: "Trace: {run_id}" where run_id is a link to the run_url. the text should be clickable and the style is blue and underlined
+            if (run_id && run_url) {
+                const trace = `Trace: <a href="${run_url}" style="color: blue; text-decoration: underline;" target="_blank">${run_id}</a>`;
+                $('#chatbox').append($('<p></p>').html(trace));
+            }
+        });
+        
+        $('#send').click(function() {
+            //send message to server
+            var message = $('#message').val();
+            $('#message').val('');
+            $('#chatbox').append('<p class="user-message">' + message + '</p>');
+         
+            socket.emit('message', {message: message});
+            $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+        });
+    </script>
+</body>
+</html>

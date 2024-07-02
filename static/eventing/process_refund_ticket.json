@@ -1,0 +1,57 @@
+[
+    {
+        "appcode": "function OnUpdate(doc, meta) {\n    var docid = meta.id\n\n    log(`Doc created/updated`, docid);\n\n    var newDoc = doc \n\n    // Check ticket status \n    const { \n        order_id,\n        approved,\n        approved_msg_sent,\n        creation_msg_sent,\n        refund_amount\n    } = doc \n\n    // Send creation message\n    if ( !creation_msg_sent && order_id ) {\n        var message = `Refund ticket ${docid} for your order ${order_id} has been created for your message. We will update you any progress. Thanks again for your support and patience with us.`\n\n        var message_sent = send_notification(message)\n\n        if ( message_sent ) {\n            log('updated creation_msg_sent', docid)\n            newDoc['creation_msg_sent'] = true \n        }\n\n        notification_to_admin()\n    }\n\n    if ( approved && !approved_msg_sent && refund_amount ) {\n        var message = `Refund ticket ${docid} for your order ${order_id} has been approved. You should be able to receive $${refund_amount} within 3-5 business days. Thanks again for your support and patience with us.`\n\n        var message_sent = send_notification(message)\n\n        if ( message_sent ) {\n            newDoc['approved_msg_sent'] = true \n            log('updated approved_msg_sent', docid)\n        }\n    }\n\n    // Update the document\n    target[docid] = newDoc\n}\n\nfunction OnDelete(meta, options) {\n    log(\"Doc deleted/expired\", meta.id);\n}\n\n\nfunction send_notification(message) {\n    var request = {\n        path: '/receive_reply',\n        params: {\n        },\n        body: {\n            \"message\": message\n        }\n    };\n\n    var response = curl('POST', endpoint, request);\n\n    if (response.status == 200) {\n        log(\"Successfully sent notification\", message)\n        return true \n    }\n\n    else { \n        log(\"Failed to send notification: \" + response.status + \" \" + response.body)\n        return false \n    }\n}\n\n\nfunction notification_to_admin() {\n    var request = {\n        path: '/new_refund_ticket_notification',\n        params: {\n        },\n        body: {}\n    }\n\n    var response = curl('POST', endpoint, request);\n\n    if (response.status == 200) {\n        log(\"Successfully notified admin on refund ticket creation\")\n        return true \n    }\n\n    else { \n        log(\"Failed to notify admin on refund ticket creation: \" + response.status + \" \" + response.body)\n        return false \n    }\n\n}",
+        "depcfg": {
+            "buckets": [
+                {
+                    "alias": "target",
+                    "bucket_name": "main",
+                    "scope_name": "data",
+                    "collection_name": "refund_tickets",
+                    "access": "rw"
+                }
+            ],
+            "curl": [
+                {
+                    "hostname": "http://YOUR_IP_ADDRESS:5001",
+                    "value": "endpoint",
+                    "auth_type": "no-auth",
+                    "username": "",
+                    "password": "*****",
+                    "bearer_key": "*****",
+                    "allow_cookies": false,
+                    "validate_ssl_certificate": false
+                }
+            ],
+            "source_bucket": "main",
+            "source_scope": "data",
+            "source_collection": "refund_tickets",
+            "metadata_bucket": "meta",
+            "metadata_scope": "_default",
+            "metadata_collection": "_default"
+        },
+        "version": "evt-7.6.1-3202-ee",
+        "enforce_schema": false,
+        "handleruuid": 3286228134,
+        "function_instance_id": "*vUik3",
+        "appname": "process_refund_ticket",
+        "settings": {
+            "dcp_stream_boundary": "from_now",
+            "deadline_timeout": 62,
+            "deployment_status": true,
+            "description": "",
+            "execution_timeout": 60,
+            "language_compatibility": "6.6.2",
+            "log_level": "INFO",
+            "n1ql_consistency": "none",
+            "processing_status": true,
+            "timer_context_size": 1024,
+            "user_prefix": "eventing",
+            "worker_count": 4
+        },
+        "function_scope": {
+            "bucket": "*",
+            "scope": "*"
+        }
+    }
+]

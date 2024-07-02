@@ -1,0 +1,675 @@
+[
+    {
+        "order_id": "SO001",
+        "customer_id": 10370,
+        "order_date": "2021/05/13",
+        "shipping_address": "789 Muskit Ave, HK",
+        "billing_address": "789 Muskit Ave, HK",
+        "payment_method": "cash",
+        "order_status": "Delivered",
+        "tracking_number": "31148076403453106204",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX204",
+                "quantity": 5,
+                "name": "PowerPro Vacuum Cleaner",
+                "price": 179.99,
+                "amount": 899.95
+            },
+            {
+                "product_id": "DX216",
+                "quantity": 2,
+                "name": "SteamWash Washing Machine",
+                "price": 549.99,
+                "amount": 1099.98
+            },
+            {
+                "product_id": "DX219",
+                "quantity": 2,
+                "name": "QuickDry Washing Machine",
+                "price": 449.99,
+                "amount": 899.98
+            }
+        ]
+    },
+    {
+        "order_id": "SO002",
+        "customer_id": 17646,
+        "order_date": "2024/05/07",
+        "shipping_address": "789 Muskit Ave, HK",
+        "billing_address": "789 Muskit Ave, HK",
+        "payment_method": "cash",
+        "order_status": "Delivered",
+        "tracking_number": "29220280278912431080",
+        "notes": "Only deliver on weekdays",
+        "items": [
+            {
+                "product_id": "DX210",
+                "quantity": 2,
+                "name": "PetHair Vacuum Cleaner",
+                "price": 199.99,
+                "amount": 399.98
+            },
+            {
+                "product_id": "DX217",
+                "quantity": 4,
+                "name": "SilentWash Washing Machine",
+                "price": 499.99,
+                "amount": 1999.96
+            },
+            {
+                "product_id": "DX215",
+                "quantity": 3,
+                "name": "All-in-One Washing Machine",
+                "price": 699.99,
+                "amount": 2099.9700000000003
+            },
+            {
+                "product_id": "DX217",
+                "quantity": 1,
+                "name": "SilentWash Washing Machine",
+                "price": 499.99,
+                "amount": 499.99
+            },
+            {
+                "product_id": "DX213",
+                "quantity": 3,
+                "name": "QuickWash Washing Machine",
+                "price": 399.99,
+                "amount": 1199.97
+            }
+        ]
+    },
+    {
+        "order_id": "SO003",
+        "customer_id": 13953,
+        "order_date": "2024/01/16",
+        "shipping_address": "456 Elm St, Anytown, USA",
+        "billing_address": "789 Muskit Ave, HK",
+        "payment_method": "credit_card",
+        "order_status": "Delivered",
+        "tracking_number": "61977013710459219579",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX204",
+                "quantity": 5,
+                "name": "PowerPro Vacuum Cleaner",
+                "price": 179.99,
+                "amount": 899.95
+            },
+            {
+                "product_id": "DX220",
+                "quantity": 1,
+                "name": "SuperWash Washing Machine",
+                "price": 699.99,
+                "amount": 699.99
+            },
+            {
+                "product_id": "DX202",
+                "quantity": 5,
+                "name": "PowerGlide Vacuum Cleaner",
+                "price": 149.99,
+                "amount": 749.95
+            },
+            {
+                "product_id": "DX219",
+                "quantity": 3,
+                "name": "QuickDry Washing Machine",
+                "price": 449.99,
+                "amount": 1349.97
+            },
+            {
+                "product_id": "DX211",
+                "quantity": 5,
+                "name": "SmartWash Washing Machine",
+                "price": 599.99,
+                "amount": 2999.95
+            }
+        ]
+    },
+    {
+        "order_id": "SO004",
+        "customer_id": 11669,
+        "order_date": "2024/02/18",
+        "shipping_address": "456 Elm St, Anytown, USA",
+        "billing_address": "789 Muskit Ave, HK",
+        "payment_method": "bank_transfer",
+        "order_status": "Delivered",
+        "tracking_number": "58352323552727630615",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX212",
+                "quantity": 3,
+                "name": "EcoWash Washing Machine",
+                "price": 499.99,
+                "amount": 1499.97
+            },
+            {
+                "product_id": "DX204",
+                "quantity": 3,
+                "name": "PowerPro Vacuum Cleaner",
+                "price": 179.99,
+                "amount": 539.97
+            },
+            {
+                "product_id": "DX212",
+                "quantity": 5,
+                "name": "EcoWash Washing Machine",
+                "price": 499.99,
+                "amount": 2499.95
+            },
+            {
+                "product_id": "DX217",
+                "quantity": 5,
+                "name": "SilentWash Washing Machine",
+                "price": 499.99,
+                "amount": 2499.95
+            }
+        ]
+    },
+    {
+        "order_id": "SO005",
+        "customer_id": 13219,
+        "order_date": "2024/04/30",
+        "shipping_address": "456 Elm St, Anytown, USA",
+        "billing_address": "123 Main St, Anytown, USA",
+        "payment_method": "bank_transfer",
+        "order_status": "Delivered",
+        "tracking_number": "99928790960052614092",
+        "notes": null,
+        "items": [
+            {
+                "product_id": "DX218",
+                "quantity": 4,
+                "name": "EnergySaver Washing Machine",
+                "price": 599.99,
+                "amount": 2399.96
+            },
+            {
+                "product_id": "DX203",
+                "quantity": 5,
+                "name": "UltraClean Vacuum Cleaner",
+                "price": 249.99,
+                "amount": 1249.95
+            }
+        ]
+    },
+    {
+        "order_id": "SO006",
+        "customer_id": 15160,
+        "order_date": "2023/12/22",
+        "shipping_address": "789 Muskit Ave, HK",
+        "billing_address": "456 Elm St, Anytown, USA",
+        "payment_method": "cash",
+        "order_status": "Delivered",
+        "tracking_number": "12550683233081460215",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX208",
+                "quantity": 4,
+                "name": "RoboClean Vacuum Cleaner",
+                "price": 299.99,
+                "amount": 1199.96
+            },
+            {
+                "product_id": "DX204",
+                "quantity": 5,
+                "name": "PowerPro Vacuum Cleaner",
+                "price": 179.99,
+                "amount": 899.95
+            },
+            {
+                "product_id": "DX213",
+                "quantity": 3,
+                "name": "QuickWash Washing Machine",
+                "price": 399.99,
+                "amount": 1199.97
+            }
+        ]
+    },
+    {
+        "order_id": "SO007",
+        "customer_id": 16754,
+        "order_date": "2023/08/03",
+        "shipping_address": "123 Main St, Anytown, USA",
+        "billing_address": "123 Main St, Anytown, USA",
+        "payment_method": "credit_card",
+        "order_status": "Delivered",
+        "tracking_number": "33818918845201048180",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX216",
+                "quantity": 5,
+                "name": "SteamWash Washing Machine",
+                "price": 549.99,
+                "amount": 2749.95
+            }
+        ]
+    },
+    {
+        "order_id": "SO008",
+        "customer_id": 16678,
+        "order_date": "2023/10/17",
+        "shipping_address": "456 Elm St, Anytown, USA",
+        "billing_address": "456 Elm St, Anytown, USA",
+        "payment_method": "credit_card",
+        "order_status": "Delivered",
+        "tracking_number": "22269557669988229407",
+        "notes": "Attach a birthday card",
+        "items": [
+            {
+                "product_id": "DX215",
+                "quantity": 1,
+                "name": "All-in-One Washing Machine",
+                "price": 699.99,
+                "amount": 699.99
+            }
+        ]
+    },
+    {
+        "order_id": "SO009",
+        "customer_id": 10961,
+        "order_date": "2024/04/02",
+        "shipping_address": "29 Otototo Rd, Tokyo, Japan",
+        "billing_address": "29 Otototo Rd, Tokyo, Japan",
+        "payment_method": "credit_card",
+        "order_status": "Delivered",
+        "tracking_number": "59005990264961329857",
+        "notes": "Only deliver on weekdays",
+        "items": [
+            {
+                "product_id": "DX211",
+                "quantity": 4,
+                "name": "SmartWash Washing Machine",
+                "price": 599.99,
+                "amount": 2399.96
+            },
+            {
+                "product_id": "DX207",
+                "quantity": 1,
+                "name": "CompactClean Vacuum Cleaner",
+                "price": 129.99,
+                "amount": 129.99
+            },
+            {
+                "product_id": "DX215",
+                "quantity": 3,
+                "name": "All-in-One Washing Machine",
+                "price": 699.99,
+                "amount": 2099.9700000000003
+            },
+            {
+                "product_id": "DX201",
+                "quantity": 3,
+                "name": "SuperSuck Vacuum Cleaner",
+                "price": 199.99,
+                "amount": 599.97
+            }
+        ]
+    },
+    {
+        "order_id": "SO010",
+        "customer_id": 17103,
+        "order_date": "2023/09/09",
+        "shipping_address": "29 Otototo Rd, Tokyo, Japan",
+        "billing_address": "456 Elm St, Anytown, USA",
+        "payment_method": "payPal",
+        "order_status": "Delivered",
+        "tracking_number": "13697246047731408797",
+        "notes": null,
+        "items": [
+            {
+                "product_id": "DX201",
+                "quantity": 3,
+                "name": "SuperSuck Vacuum Cleaner",
+                "price": 199.99,
+                "amount": 599.97
+            },
+            {
+                "product_id": "DX214",
+                "quantity": 5,
+                "name": "GentleWash Washing Machine",
+                "price": 549.99,
+                "amount": 2749.95
+            }
+        ]
+    },
+    {
+        "order_id": "SO011",
+        "customer_id": 19263,
+        "order_date": "2023/07/18",
+        "shipping_address": "29 Otototo Rd, Tokyo, Japan",
+        "billing_address": "29 Otototo Rd, Tokyo, Japan",
+        "payment_method": "cash",
+        "order_status": "Delivered",
+        "tracking_number": "45268140728872759988",
+        "notes": "Attach a birthday card",
+        "items": [
+            {
+                "product_id": "DX204",
+                "quantity": 3,
+                "name": "PowerPro Vacuum Cleaner",
+                "price": 179.99,
+                "amount": 539.97
+            },
+            {
+                "product_id": "DX209",
+                "quantity": 2,
+                "name": "HandyClean Vacuum Cleaner",
+                "price": 99.99,
+                "amount": 199.98
+            },
+            {
+                "product_id": "DX201",
+                "quantity": 1,
+                "name": "SuperSuck Vacuum Cleaner",
+                "price": 199.99,
+                "amount": 199.99
+            },
+            {
+                "product_id": "DX210",
+                "quantity": 3,
+                "name": "PetHair Vacuum Cleaner",
+                "price": 199.99,
+                "amount": 599.97
+            }
+        ]
+    },
+    {
+        "order_id": "SO012",
+        "customer_id": 17697,
+        "order_date": "2023/07/23",
+        "shipping_address": "123 Main St, Anytown, USA",
+        "billing_address": "456 Elm St, Anytown, USA",
+        "payment_method": "credit_card",
+        "order_status": "Delivered",
+        "tracking_number": "37806335333627783373",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX201",
+                "quantity": 1,
+                "name": "SuperSuck Vacuum Cleaner",
+                "price": 199.99,
+                "amount": 199.99
+            },
+            {
+                "product_id": "DX218",
+                "quantity": 3,
+                "name": "EnergySaver Washing Machine",
+                "price": 599.99,
+                "amount": 1799.97
+            },
+            {
+                "product_id": "DX209",
+                "quantity": 2,
+                "name": "HandyClean Vacuum Cleaner",
+                "price": 99.99,
+                "amount": 199.98
+            },
+            {
+                "product_id": "DX213",
+                "quantity": 5,
+                "name": "QuickWash Washing Machine",
+                "price": 399.99,
+                "amount": 1999.95
+            },
+            {
+                "product_id": "DX209",
+                "quantity": 4,
+                "name": "HandyClean Vacuum Cleaner",
+                "price": 99.99,
+                "amount": 399.96
+            }
+        ]
+    },
+    {
+        "order_id": "SO013",
+        "customer_id": 13647,
+        "order_date": "2023/07/17",
+        "shipping_address": "29 Otototo Rd, Tokyo, Japan",
+        "billing_address": "789 Muskit Ave, HK",
+        "payment_method": "credit_card",
+        "order_status": "Delivered",
+        "tracking_number": "82954610335699798839",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX207",
+                "quantity": 3,
+                "name": "CompactClean Vacuum Cleaner",
+                "price": 129.99,
+                "amount": 389.97
+            },
+            {
+                "product_id": "DX206",
+                "quantity": 4,
+                "name": "TurboClean Vacuum Cleaner",
+                "price": 159.99,
+                "amount": 639.96
+            }
+        ]
+    },
+    {
+        "order_id": "SO014",
+        "customer_id": 10572,
+        "order_date": "2023/12/12",
+        "shipping_address": "456 Elm St, Anytown, USA",
+        "billing_address": "123 Main St, Anytown, USA",
+        "payment_method": "cash",
+        "order_status": "Delivered",
+        "tracking_number": "66188514159077725751",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX203",
+                "quantity": 2,
+                "name": "UltraClean Vacuum Cleaner",
+                "price": 249.99,
+                "amount": 499.98
+            },
+            {
+                "product_id": "DX220",
+                "quantity": 3,
+                "name": "SuperWash Washing Machine",
+                "price": 699.99,
+                "amount": 2099.9700000000003
+            },
+            {
+                "product_id": "DX207",
+                "quantity": 1,
+                "name": "CompactClean Vacuum Cleaner",
+                "price": 129.99,
+                "amount": 129.99
+            },
+            {
+                "product_id": "DX201",
+                "quantity": 2,
+                "name": "SuperSuck Vacuum Cleaner",
+                "price": 199.99,
+                "amount": 399.98
+            }
+        ]
+    },
+    {
+        "order_id": "SO015",
+        "customer_id": 17641,
+        "order_date": "2024/05/08",
+        "shipping_address": "789 Muskit Ave, HK",
+        "billing_address": "789 Muskit Ave, HK",
+        "payment_method": "cash",
+        "order_status": "Delivered",
+        "tracking_number": "19461640395950947656",
+        "notes": "Only deliver on weekdays",
+        "items": [
+            {
+                "product_id": "DX213",
+                "quantity": 3,
+                "name": "QuickWash Washing Machine",
+                "price": 399.99,
+                "amount": 1199.97
+            },
+            {
+                "product_id": "DX217",
+                "quantity": 2,
+                "name": "SilentWash Washing Machine",
+                "price": 499.99,
+                "amount": 999.98
+            },
+            {
+                "product_id": "DX220",
+                "quantity": 3,
+                "name": "SuperWash Washing Machine",
+                "price": 699.99,
+                "amount": 2099.9700000000003
+            },
+            {
+                "product_id": "DX202",
+                "quantity": 5,
+                "name": "PowerGlide Vacuum Cleaner",
+                "price": 149.99,
+                "amount": 749.95
+            }
+        ]
+    },
+    {
+        "order_id": "SO016",
+        "customer_id": 14027,
+        "order_date": "2024/05/10",
+        "shipping_address": "456 Elm St, Anytown, USA",
+        "billing_address": "123 Main St, Anytown, USA",
+        "payment_method": "payPal",
+        "order_status": "Delivered",
+        "tracking_number": "44965625334307913672",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX215",
+                "quantity": 3,
+                "name": "All-in-One Washing Machine",
+                "price": 699.99,
+                "amount": 2099.9700000000003
+            }
+        ]
+    },
+    {
+        "order_id": "SO017",
+        "customer_id": 11440,
+        "order_date": "2023/08/29",
+        "shipping_address": "29 Otototo Rd, Tokyo, Japan",
+        "billing_address": "456 Elm St, Anytown, USA",
+        "payment_method": "cash",
+        "order_status": "Delivered",
+        "tracking_number": "41295278262446094288",
+        "notes": "Attach a birthday card",
+        "items": [
+            {
+                "product_id": "DX207",
+                "quantity": 3,
+                "name": "CompactClean Vacuum Cleaner",
+                "price": 129.99,
+                "amount": 389.97
+            }
+        ]
+    },
+    {
+        "order_id": "SO018",
+        "customer_id": 10085,
+        "order_date": "2023/08/21",
+        "shipping_address": "123 Main St, Anytown, USA",
+        "billing_address": "456 Elm St, Anytown, USA",
+        "payment_method": "cash",
+        "order_status": "Delivered",
+        "tracking_number": "92519705461276653768",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX215",
+                "quantity": 5,
+                "name": "All-in-One Washing Machine",
+                "price": 699.99,
+                "amount": 3499.95
+            },
+            {
+                "product_id": "DX205",
+                "quantity": 2,
+                "name": "PetPro Vacuum Cleaner",
+                "price": 219.99,
+                "amount": 439.98
+            }
+        ]
+    },
+    {
+        "order_id": "SO019",
+        "customer_id": 14667,
+        "order_date": "2023/09/07",
+        "shipping_address": "123 Main St, Anytown, USA",
+        "billing_address": "29 Otototo Rd, Tokyo, Japan",
+        "payment_method": "bank_transfer",
+        "order_status": "Delivered",
+        "tracking_number": "57864933323602516699",
+        "notes": "Customer with hearing aids",
+        "items": [
+            {
+                "product_id": "DX212",
+                "quantity": 1,
+                "name": "EcoWash Washing Machine",
+                "price": 499.99,
+                "amount": 499.99
+            },
+            {
+                "product_id": "DX201",
+                "quantity": 1,
+                "name": "SuperSuck Vacuum Cleaner",
+                "price": 199.99,
+                "amount": 199.99
+            },
+            {
+                "product_id": "DX207",
+                "quantity": 2,
+                "name": "CompactClean Vacuum Cleaner",
+                "price": 129.99,
+                "amount": 259.98
+            }
+        ]
+    },
+    {
+        "order_id": "SO020",
+        "customer_id": 19470,
+        "order_date": "2024/05/27",
+        "shipping_address": "29 Otototo Rd, Tokyo, Japan",
+        "billing_address": "123 Main St, Anytown, USA",
+        "payment_method": "cash",
+        "order_status": "Delivered",
+        "tracking_number": "94917885148441677206",
+        "notes": "Attach a birthday card",
+        "items": [
+            {
+                "product_id": "DX215",
+                "quantity": 4,
+                "name": "All-in-One Washing Machine",
+                "price": 699.99,
+                "amount": 2799.96
+            },
+            {
+                "product_id": "DX216",
+                "quantity": 5,
+                "name": "SteamWash Washing Machine",
+                "price": 549.99,
+                "amount": 2749.95
+            },
+            {
+                "product_id": "DX213",
+                "quantity": 5,
+                "name": "QuickWash Washing Machine",
+                "price": 399.99,
+                "amount": 1999.95
+            }
+        ]
+    }
+]

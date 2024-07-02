@@ -1,0 +1,48 @@
+[
+    {
+        "appcode": "function OnUpdate(doc, meta) {\n    var docid = meta.id\n\n    log(`Message response document created/updated`, docid);\n\n    var { response } = doc\n\n    // send notification\n    if ( response ) {\n        var message_sent = send_notification(response)\n\n        if ( message_sent ) {\n            log(\"successfully sent customer response..\")\n        }\n    }\n}\n\nfunction OnDelete(meta, options) {\n    log(\"Doc deleted/expired\", meta.id);\n}\n\n\nfunction send_notification(message) {\n    var request = {\n        path: '/receive_reply',\n        params: {\n        },\n        body: {\n            \"message\": message,\n        }\n    };\n\n    var response = curl('POST', endpoint, request);\n\n    if (response.status == 200) {\n        log(\"Successfully sent notification\", message)\n        return true \n    }\n\n    else { \n        log(\"Failed to tag metadata: \" + response.status + \" \" + response.body)\n        return false \n    }\n}",
+        "depcfg": {
+            "curl": [
+                {
+                    "hostname": "http://YOUR_IP_ADDRESS:5001",
+                    "value": "endpoint",
+                    "auth_type": "no-auth",
+                    "username": "",
+                    "password": "*****",
+                    "bearer_key": "*****",
+                    "allow_cookies": false,
+                    "validate_ssl_certificate": false
+                }
+            ],
+            "source_bucket": "main",
+            "source_scope": "data",
+            "source_collection": "message_responses",
+            "metadata_bucket": "meta",
+            "metadata_scope": "_default",
+            "metadata_collection": "_default"
+        },
+        "version": "evt-7.6.1-3202-ee",
+        "enforce_schema": false,
+        "handleruuid": 716223524,
+        "function_instance_id": "uKUgz2",
+        "appname": "message_response_processing",
+        "settings": {
+            "dcp_stream_boundary": "from_now",
+            "deadline_timeout": 62,
+            "deployment_status": true,
+            "description": "",
+            "execution_timeout": 60,
+            "language_compatibility": "6.6.2",
+            "log_level": "INFO",
+            "n1ql_consistency": "none",
+            "processing_status": true,
+            "timer_context_size": 1024,
+            "user_prefix": "eventing",
+            "worker_count": 1
+        },
+        "function_scope": {
+            "bucket": "*",
+            "scope": "*"
+        }
+    }
+]
