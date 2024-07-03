@@ -51,7 +51,7 @@ GPT-4o is used in this demo. You need to have an **OPENAI_API_KEY** from [OpenAI
 We will need 2 instances, one to host the app (**the App Node**), and the other for running Couchbase as the backend (**the Couchbase Node**). Follow either 1.2.1 for Terraform setup, or set up manually from any linux-based VM instance from 1.2.2. 
 
 
->🙌🏻 Use either method below for installation.
+>🙌🏻 Run either 1.2.1 or 1.2.2 below for nodes creation.
 
 <br>
 
@@ -70,7 +70,7 @@ secret_key =
 Finish the set up of server.tf and run the script. Upon successful node creation you should see these 2 hostnames as output. Note them down. 
 
 
-![alt text](image.png)
+![alt text](static/images/image.png)
 
 <br>
 
@@ -121,25 +121,30 @@ Grab the hostname of Couchbase Node and let's create the backend. Access the Cou
 
 You'll be greeted with the screen below. 
 
-![Couchbase Welcome Screen](image-1.png)
+![Couchbase Welcome Screen](static/images/image-1.png)
 
 <br><br>
 
-Let's setup a new cluster. In the next screen, accept the terms and click "**Configure Disk, Memory, Services**" since we don't need all Couchbase services in this demo. Note down the **Username** and **Password**
+Let's setup a new cluster. Note down the **Username** and **Password**
 
-![New Cluster Creation](image-2.png)
+![New Cluster Creation](static/images/image-2.png)
+
+<br><br>
+
+Accept the terms and click "**Configure Disk, Memory, Services**" since we don't need all Couchbase services in this demo. 
+
+![alt text](static/images/image-19.png)
 
 <br><br>
 
-In the next screen, unselect "Analytics" and "Backup". Leave the rest unchanged and click "**Save & Finish**"
+Unselect "Analytics" and "Backup". Leave the rest unchanged and click "**Save & Finish**"
 
-![Couchbase Service Selection](image-3.png)
+![Couchbase Service Selection](static/images/image-3.png)
 
-<br><br>
 
 All good! You'll see the empty-ish screen below since we haven't created the data structure or ingested data, which will be via scripted. Now let's proceed with the App Node.
 
-![alt text](image-4.png)
+![alt text](static/images/image-4.png)
 
 <br>
 
@@ -163,6 +168,31 @@ nano .env
 
 <br>
 
+.env file: 
+
+```
+# LLM Keys
+OPENAI_API_KEY={openai_api_key}
+
+# EE Environment Variables 
+EE_HOSTNAME={Couchbase_node_hostname}
+EVENTING_HOSTNAME={Couchbase_node_hostname}
+SEARCH_HOSTNAME={Couchbase_node_hostname}
+
+#Couchbase User Credential
+CB_USERNAME={username_created}
+CB_PASSWORD={password_created}
+
+# App Node
+APP_NODE_HOSTNAME={App_node_hostname}
+
+#LangSmith
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_API_KEY={langchain_api_key}
+```
+
+<br>
+
 Update the Eventing functions endpoints with the hostname of App Node. 
 
 ```
@@ -182,18 +212,6 @@ python3 setupservers.py
 
 <br>
 
-Create Eventing functions and FTS indexes.
-
-```
-python3 setupothers.py
-```
-
-<br>
-
->🙌🏻 - FTS is Couchbase's full text and semantic search service. 
-
-<br>
-
 Now let's load some sample data. This includes products, orders, product FAQ, and refund policies. We will see the bot reasoning through the query and interact with the data in the ways deemed fit.
 
 ```
@@ -204,13 +222,13 @@ python3 reindex.py
 
 You should be able to see this success message.
 
-![alt text](image-5.png)
+![alt text](static/images/image-5.png)
 
 <br>
 
 You can also check the Couchbase console. There should be data in "**orders**", "**products**" and "**policies**" collections under **"main"."data"** keyspace.
 
-![alt text](image-6.png)
+![alt text](static/images/image-6.png)
 
 <br>
 
@@ -250,7 +268,7 @@ On your browser, access this link below. You should see the empty chat screen.
 
 > {App_node_hostname}:5001
 
-![App Welcome Screen](image-7.png)
+![App Welcome Screen](static/images/image-7.png)
 
 
 <br>
@@ -265,13 +283,13 @@ Let's ask some product related questions:
 I bought a vacuum and I really liked it! Do you have any washing machines to recommend as well?
 ```
 
-![Product Recommendations](image-8.png)
+![Product Recommendations](static/images/image-8.png)
 
 Under the hood the bot is sending SQL queries to Couchbase to fetch washing machine product info. 
 
 <br>
 
-Let's ask questions that's trickier than SQL query. 
+Let's ask questions that's trickier than SQL query. Refresh the page, and ask another question.
 
 ```
 I bought a washing machine and it's starting to smell really bad recently. What should I do? 
@@ -279,7 +297,7 @@ I bought a washing machine and it's starting to smell really bad recently. What 
 
 <br>
 
-![RAG](image-9.png)
+![RAG](static/images/image-9.png)
 
 <br>
 
@@ -287,13 +305,13 @@ Other than recommending some products, it's actually looking into the product ma
 
 <br><br>
 
-Let's try asking some refund queries: 
+Let's refresh the page again, and try asking some refund queries: 
 
 ```
 I bought a washing machine and my order is SO005. It stopped working. I'd like to have a refund please.
 ```
 
-![Invalid Refund Request](image-11.png)
+![Invalid Refund Request](static/images/image-11.png)
 
 <br>
 
@@ -305,31 +323,88 @@ I bought a vacuum and my order is SO005. It stopped working. I'd like to have a 
 
 <br>
 
-![Valid Refund Request](image-12.png)
+![Valid Refund Request](static/images/image-20.png)
 
 <br>
 
-This time the refund request is deemed valid since washing machien and vacuum have different refund period (you can check under **dataset/faq.txt**, which is indexed into Couchbase). The bot even went so far as to create a refund ticket, which can be found under "main"."data"."refund_tickets" collection in Couchbase.
+This time the refund request is deemed valid since washing machien and vacuum have different refund period (you can check under **dataset/faq.txt**, which is indexed into Couchbase). Note the bot even created a refund ticket, which can be found under "main"."data"."refund_tickets" collection in Couchbase.
 
-![Refund Tickets Collection](image-13.png)
+![Refund Tickets Collection](static/images/image-13.png)
 
 <br><br>
 
 
 ## Beyond the Question Answering
 
-Realistically, the custoemr service process doesn't end with the initial response provided. A common example is follow-ups on the refund ticket. Let's put on the hat of a Refund Manager and look at the valid requests created by the bot. Access the 
+Realistically, the customer service process doesn't end with the initial response provided. A common example is follow-ups on the refund ticket. Let's put on the hat of a Refund Manager and look at the valid requests created by the bot. Access the Refund_Tickets page via: 
+
+> {App_node_hostname}:5001/tickets 
+
+<br>
+
+![alt text](static/images/image-21.png)
+
+Logically, the refund admin looks at the information here, checks out details of everything, and makes a sound judgement on whether the bot-deemed-qualified refund is indeed valid, and the refund amount.
+
+Of course another LLM agent can be set up for this task too, but let’s agree on this: in 2024, it’s still a good call to involve human beings in such decision makings. Let’s approve this refund ticket.
+
+You’ll see a success message. Refresh the page. The update is reflected.
+
+Go back to main page. Another message is sent to the customer on the good news of the refund ticket. Again, [Couchbase Eventing](https://www.couchbase.com/products/eventing/) doing its real time process stitching. 
 
 
+![alt text](static/images/image-22.png)
+
+<br>
+
+Let’s go to “Customer Message” tab. 
+
+> {App_node_hostname}:5001/messages 
+
+<br>
+
+![alt text](static/images/image-23.png)
 
 
+Note each message has been labelled a sentiment, and a category. We’re leveraging LLM to apply metadata here, but again, Eventing is making this automation smooth as butter.
 
+<br><br>
 
 ## Traceability 
 
 We all know LLM cannot be fully deterministic at the moment. That is why, if we entrust the reasoning process to a bot, we need to have full visibility on its reasoning process. 
 
-Note how every response from the bot has a "trace" link provided. Let's click the link
+Note how every response from the bot has a "trace" link provided. Let's click the link, which will take us to the LangSmith page where this reasoning process is broken down to details.
 
-![trace](image-14.png)
+<br>
+
+![trace](static/images/image-14.png)
+
+<br>
+
+With first-time access, you'll be prompted to login. Use the same credentials for which you created the LangChain API key. 
+
+![alt text](static/images/image-24.png)
+
+<br><br>
+
+You should be able to see something like this:
+
+![alt text](static/images/image-25.png)
+
+
+LangSmith is an awesome tool for understanding and troubleshooting the agentic process. Note in our workflow, we have define 5 agents: 
+
+- General-support agent that gathers info of order and products mentioned, and generate an initial response 
+- Recommendation agent that searches and recommends products
+- Product_fix agent that searches the FAQ library for any product-related queries 
+- Refund agent that reasons through whether refund requests, if raised, is valid 
+- And a Finalizer agent that takes all info gathered previously, and generate a professional and relevant response based on customer query. 
+
+
+<br><br>
+
+Drill into any step during the reasoning chain, look at the input/output. I find it amazing at even optimizing my workflows!
+
+![alt text](image-26.png)
 
