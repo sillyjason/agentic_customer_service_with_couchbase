@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 import json 
 import re
+from couchbaseops import run_query
 
 load_dotenv()
 
@@ -130,15 +131,14 @@ def import_function(function_name):
 
 import_function("process_refund_ticket")
 import_function("process_message")
-import_function("message_response_processing")
 
 
-#setup fts index
+# setup fts index
 def import_fts_index():
     print(f"Importing fts index...")
     
     try:
-        url = f"http://{SEARCH_HOSTNAME}:8094/api/bucket/main/scope/data/index/embedding-index"
+        url = f"http://{SEARCH_HOSTNAME}:8094/api/bucket/main/scope/data/index/data_fts"
         with open(f'./static/fts-index.json', 'r') as file:
             data = json.load(file)
             requests.put(url, auth=(CB_USERNAME, CB_PASSWORD), json=data)
@@ -148,5 +148,19 @@ def import_fts_index():
         print(f"Error importing fts index: {str(e)}")
 
 import_fts_index()
+
+
+# create primary indexes 
+def create_primary_index(bucket_name, scope_name, collection_name):
+    run_query(f"CREATE PRIMARY INDEX ON `{bucket_name}`:`{scope_name}`.`{collection_name}`")
+    
+
+create_primary_index("main", "data", "policies")
+create_primary_index("main", "data", "orders")
+create_primary_index("main", "data", "products")
+create_primary_index("main", "data", "messages")
+create_primary_index("main", "data", "message_responses")
+create_primary_index("main", "data", "refund_tickets")
+
 
 print("setup complete.")

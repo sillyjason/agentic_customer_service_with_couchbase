@@ -25,6 +25,9 @@ model = ChatOpenAI(temperature=0, model="gpt-4o-2024-05-13")
 # load the environment variables
 load_dotenv()
 
+# generate a unique thread id by getting current time in unix
+thread_id = str(int(time.time()))
+
 
 # agent state and agent 
 class AgentState(TypedDict):
@@ -87,8 +90,10 @@ class Agent:
                 function_args = t["args"]
                 
                 if tool_name == "calculate_refund_eligibility":
-                    current_states = graph.get_state(config={"configurable": {"thread_id": "001"}}).values 
-                    function_args['order_date'] = current_states['order_date']
+                    current_states = graph.get_state(config={"configurable": {"thread_id": thread_id}}).values 
+                    
+                    if "order_date" in current_states and current_states["order_date"]:
+                        function_args["order_date"] = current_states["order_date"]
                 
                 result = self.tools[tool_name].invoke(function_args)
             
@@ -259,7 +264,7 @@ def run_agent_langgraph(message):
         response = graph.invoke(
             {"message": message},
             config={
-                "configurable": {"thread_id": "001"}
+                "configurable": {"thread_id": thread_id}
             }
         )
  

@@ -1,25 +1,24 @@
 import json
-import requests
 import os
+from dotenv import load_dotenv
 
-# 1. Find public ipv4 address
-response = requests.get('https://api.ipify.org?format=json')
-IP_ADDRESS = response.json()['ip']
+load_dotenv()
 
-print(f'Your public IP address is: {IP_ADDRESS}')
+APP_NODE_HOSTNAME = os.getenv("APP_NODE_HOSTNAME")
 
-# 2. Replace "YOUR_IP_ADDRESS" in the JSON file
+# Replace "YOUR_IP_ADDRESS" in the JSON file
 def update_json_file(file_path):
-    file_path = os.path.join('static', 'events', file_path)
+    file_path = os.path.join('static', 'eventing', file_path)
     with open(file_path, 'r+') as file:
         data = json.load(file)
         data_as_str = json.dumps(data)
-        data_as_str = data_as_str.replace("YOUR_IP_ADDRESS", IP_ADDRESS)
+        data_as_str = data_as_str.replace("YOUR_IP_ADDRESS", APP_NODE_HOSTNAME)
         data = json.loads(data_as_str)
         file.seek(0)
         json.dump(data, file, indent=4)
         file.truncate()
 
-update_json_file('message_response_processing.json')
 update_json_file('process_message.json')
 update_json_file('process_refund_ticket.json')
+
+print(f"Updated Eventing JSON files with IP address: {APP_NODE_HOSTNAME}")

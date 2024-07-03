@@ -35,62 +35,111 @@ https://www.couchbase.com). Knowledge of these 2 tools are a plus but not a prer
 
 ## Setup
 
-**1.1 LLM**
+**1.1 LLM & LangSmith**
 <br>
 
-GPT-4o is used in this demo. You need to have an OPENAI_API_KEY from OpenAI. 
+GPT-4o is used in this demo. You need to have an **OPENAI_API_KEY** from [OpenAI](https://openai.com/). 
+
+[LangSmith](https://smith.langchain.com/) is the observability stack for LangChain, and is used for traceability, a crucial component that makes it ever simplier to understand, troubleshoot, and optimize the LLM workflow. We'll also get a **LangChain_API_KEY**.  
+
 
 <br>
 
-**1.2 AWS VM**
+**1.2 VM Deployment**
 <br>
 
->🙌🏻 Use either method below for installation
+We will need 2 instances, one to host the app (**the App Node**), and the other for running Couchbase as the backend (**the Couchbase Node**). Follow either 1.2.1 for Terraform setup, or set up manually from any linux-based VM instance from 1.2.2. 
+
+
+>🙌🏻 Use either method below for installation.
 
 <br>
 
 **1.2.1 Using Terraform** 
 <br>
 
-If you’re a Terraform user, download the /terraform folders from the root directory of this Github repo. Finish the set up of server.tf and run the script.
+If you’re a Terraform user, download the /terraform folders from the root directory of this Github repo. 
+
+Create a variable file terraform.template.tfvars with necessary cloud credentials. I'm using AWS and this is the variables I needed. If you're on another cloud, follow [Terraform documentation](https://registry.terraform.io/) for proper setup:
+
+```
+access_key = 
+secret_key = 
+```
+
+Finish the set up of server.tf and run the script. Upon successful node creation you should see these 2 hostnames as output. Note them down. 
+
+
+![alt text](image.png)
 
 <br>
 
 **1.2.2 Using AWS Console** 
 <br>
 
-Create a virtual machine with the following startup script (I'm using AWS EC2): 
+Create a the **App Node** with the following startup script: 
 ```
 #!/bin/bash
 sudo yum update -y
 sudo yum install git -y
 sudo yum install python3 -y
 sudo yum install python3-pip -y
-git clone https://github.com/sillyjason/chatbot-cb-2
-cd chatbot-cb-2
+git clone https://github.com/sillyjason/agentic_customer_service_with_couchbase
+cd agentic_customer_service_with_couchbase
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 <br>
 
-Make sure to update Security Group setting to allow ALL inbound/outbound traffics
+
+Create a the **Couchbase Node** with the following startup script: 
+```
+#!/bin/bash
+sudo wget https://packages.couchbase.com/releases/7.6.1/couchbase-server-enterprise-7.6.1-linux.x86_64.rpm
+yes | sudo yum install ./couchbase-server*.rpm
+sudo systemctl start couchbase-server
+```
+<br>
+
+>🙌🏻 Make sure to update Security Group setting to allow ALL inbound/outbound traffics.
 
 <br>
 
-**1.2.3 Get Instance Hostname**
-<br>
-
-Let's call this VM our **APP Node**. Note down its Public IPv4 DNS. 
+By now both App Node and Couchbase Node are successfully created. Let's continue.  
 
 <br>
 
-**1.3 Couchbase Setup**
+**1.3 Couchbase Node Setup**
 <br>
 
-Create another VM, install Couchbase with these services enabled: **Data, Query, Index, Search, Eventing**. Make sure the Server version is EE 7.6. If you're new to Couchbase, follow this [link](https://docs.couchbase.com/server/current/install/install-linux.html) for more details. 
+Grab the hostname of Couchbase Node and let's create the backend. Access the Couchbase service via this link: 
 
-Let's call this one our **Couchbase Node**. Grab it's IPv4 address too.
+```
+{couchbase_node_dns:8091}
+```
+
+You'll be greeted with the screen below. 
+
+![Couchbase Welcome Screen](image-1.png)
+
+<br><br>
+
+Let's setup a new cluster. In the next screen, accept the terms and click "**Configure Disk, Memory, Services**" since we don't need all Couchbase services in this demo. Note down the **Username** and **Password**
+
+![New Cluster Creation](image-2.png)
+
+<br><br>
+
+In the next screen, unselect "Analytics" and "Backup". Leave the rest unchanged and click "**Save & Finish**"
+
+![Couchbase Service Selection](image-3.png)
+
+<br><br>
+
+All good! You'll see the empty-ish screen below since we haven't created the data structure or ingested data, which will be via scripted. Now let's proceed with the App Node.
+
+![alt text](image-4.png)
 
 <br>
 
@@ -99,62 +148,41 @@ Let's call this one our **Couchbase Node**. Grab it's IPv4 address too.
 
 <br><br>
 
-**1.4 Get, Set, Run!**
+**1.4 App Node Setup**
 
 <br>
 
-**1.4.1 App node setup**
-<br>
-
-SSH into your App node and run the following codes to enter the project location and activate python virtual environment: 
+SSH into your App Node, cd into the project directory, activate python virtual environment, and edit the **.env** file: 
 ```
 sudo -i
 cd /
-cd chatbot-cb-2
+cd agentic_customer_service_with_couchbase
 source venv/bin/activate
+nano .env
 ```
 
 <br>
 
-**1.4.2 .ENV Setup**
-<br>
-
-At SSH session, run “nano .env” and fill in these environmental variables:
+Update the Eventing functions endpoints with the hostname of App Node. 
 
 ```
-#EE Environment Variables 
-EE_HOSTNAME={IPv4 of Couchbase Node}
-EVENTING_HOSTNAME={IPv4 of Couchbase Node}
-SEARCH_HOSTNAME={IPv4 of Couchbase Node}
-
-#Chatbot Endpoint
-CHATBOT_APP_END_POINT={IPv4 of App Node}
-
-#CB User Credential 
-CB_USERNAME={username for Couchbase}
-CB_PASSWORD= {password for Couchbase}
-
-#LLM Keys 
-OPENAI_API_KEY={your OPENAI api key}
+python3 updateips.py
 ```
 
-<br><br>
+>🙌🏻 - Eventing is Couchbase's version of Database Trigger and Lambda functions. It's a versatile and powerful tool to stitch together your data processes and achieve high automation.
 
-**1.4.3 Additional Setup**
-
-<br>
-Set up bucket/scope/collections
 
 <br>
 
+Set up bucket/scope/collections, fts index, and update the endpoint for the app: 
+
 ```
-python3 setupbucket.py
+python3 setupservers.py
 ```
 
 <br>
 
 Create Eventing functions and FTS indexes.
-<br>
 
 ```
 python3 setupothers.py
@@ -162,14 +190,48 @@ python3 setupothers.py
 
 <br>
 
->🙌🏻 - Eventing is Couchbase's version of Database Trigger and Lambda functions. It's a versatile and powerful tool to stitch together your data processes and achieve high automation.
-
 >🙌🏻 - FTS is Couchbase's full text and semantic search service. 
 
 <br>
 
-All good. Let's go 
+Now let's load some sample data. This includes products, orders, product FAQ, and refund policies. We will see the bot reasoning through the query and interact with the data in the ways deemed fit.
+
+```
+python3 reindex.py
+```
+
 <br>
+
+You should be able to see this success message.
+
+![alt text](image-5.png)
+
+<br>
+
+You can also check the Couchbase console. There should be data in "**orders**", "**products**" and "**policies**" collections under **"main"."data"** keyspace.
+
+![alt text](image-6.png)
+
+<br>
+
+As a last step, let's create some indexes needed for the bot to run queries later. Go to Couchbase console, select Query from the left side menu bar, and run the syntaxes below individually: 
+
+```
+create primary index on `main`.`data`.`policies`
+create primary index on `main`.`data`.`products`
+create primary index on `main`.`data`.`orders`
+create primary index on `main`.`data`.`messages`
+create primary index on `main`.`data`.`message_responses`
+create primary index on `main`.`data`.`refund_tickets`
+```
+
+<br>
+
+>🙌🏻 We're creating primary indexes here which only index the document keys, and this is not a recommended indexing behavior in production environment, where more performant and advanced indexing should be employed instead.
+
+<br><br>
+
+All good. Let's go 
 
 ```
 python3 app.py
@@ -179,176 +241,95 @@ python3 app.py
 
 <br><br>
 
-## Demo Process 
+## Chat with the Bot 
 
 <br>
 
-**2.1 AI Data Pipeline**
-<br>
 
-We’ll use a series of Eventing functions to simplify the AI data pipeline, which needless to say, is a big challenge for any company looking to build a GenAI application, considering the enormity and complexity of their unstructured data source. Here is what happens with Couchbase
+On your browser, access this link below. You should see the empty chat screen.
 
+> {App_node_hostname}:5001
 
-<br>
-
-**Import Data**
-<br>
-
-Download the “raw-data.json” file under directory templates/assets/. At “Import” tab under Data Tools, import the file into main.raw.raw collection.  
-
-<img width="1427" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/ba300a13-3c98-4861-b410-3e5c52ad6a16">
-
-<br><br>
-
-
->🙌🏻 It’s worth pointing out the steps this raw data must go through before it’s RAG ready:
->- Data format inconsistency. For example, “last_upddate” field
->- Empty spaces. For example, “content” field
->- Data of different nature (2 product JSON and 1 email regarding internal policy JSON)
->- Sensitive data. For example, ID or email in “content” field (in real time scenarios this should be done with a local model. In our case for the light-weight-ness of the app we're running with REST call instead.)
-
-<br>
-
-After import, go to main.raw.raw collection to check data successfully imported;
-
-<br>
-
-<img width="1111" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/3174a8f5-ba92-4232-8dcc-435b117b8165">
-
-<br>
-
-Then, go to main.raw.formatted collection. Data reformatting, masking, and labelling are already applied automatically.
-
-<br>
-
-<img width="1144" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/50808ee0-b6a5-4c97-a4f7-0bbf02e094ab">
-
-<br>
-
-Click to open the document that looks like *"content": "Dear Tony....* You’ll notice the format inconsistency, empty space, and sensitive data issues are taken care of
-
-<br>
-
-<img width="670" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/090e2f82-3b9f-47bf-aefb-ac9a269f31cb">
-
-<br>
-<br>
-
->🙌🏻 note that in this demo, the sensitive data masking is done by prompting OPENAI with a API call. In production this defeats the purpose of data protection and instead, the model should be deployed locally hence local inferencing, a totally viable approach) 
-
-<br>
-
-Also note, every doc is added a “type” field which is an enumeration of [“internal_policies”, “insurance_product”]
-
-<br>
-
-<img width="643" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/83543e6a-953f-4756-b1b1-c52e77b35573">
-
-<br>
-
-Go to scope “data”. The 3 raw JSON objects are now pigeonholed into corresponding collections, automatically. Also note embedding is added. 
-
-<br>
-
-<img width="644" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/113e5053-0704-4a21-92b9-eafa53c2212a">
+![App Welcome Screen](image-7.png)
 
 
 <br>
 
-## Now let’s do some chatbot’ing  
-<br>
-
-
-**2.2 Chatbot**
+**Ask Product Questions**
 
 <br>
 
-Open your browser, access the chatbot via port 5000:  *{IPv4 of App Node}:5000*
-
-<br>
-
-<img width="1403" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/9977a53b-2d8b-445b-b1dd-b4d8f02ecdec">
-
-<br><br>
-
-Take a look at the raw data, and feel free to ask any questions. 
-
-<br><br>
-
-<img width="1389" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/4498e847-52e4-43a3-93f9-8367c67b56ab">
-
-<br><br>
-
-Also note there are elements of user engagements. Feel free to give ratings to the comments. 
-
-<br><br>
-
-<img width="721" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/6b2c0673-734f-4f84-8e43-c8acc2b670a3">
-
-<br><br>
-
-
-At this moment we’ve demoed how Couchbase acts as both vector store and AI data pipeline orchestration platform. But we can demo more. 
-
-<br><br>
-
-**2.3 Agile Development, Simplified Query, etc.**
-<br>
-
->🙌🏻 At this stage we've seen Couchbase making possible a RAG solution plus automated data processing. Let's see more.
- 
-<br>
-
-**2.3.1 NoSQL Flexibility**
-<br>
-
-What if in quick iteration, customer needs to update their schema? In our example, collection main.chats.human has the field “user_id”, but not main.chats.bot. If it’s decided that the field be added to the ‘bot’ collection too, just to go Query tab and run the following: 
-
-<br>
-
-<img width="648" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/19203a25-7971-497c-ab43-4c78deac6431">
-
+Let's ask some product related questions: 
 
 ```
-UPDATE main.chats.bot AS b
-SET b.user_id = (SELECT RAW d.user_id FROM main.chats.human AS d WHERE meta().id = b.user_msg_id)[0]
-WHERE b.user_msg_id IS NOT NULL;
+I bought a vacuum and I really liked it! Do you have any washing machines to recommend as well?
+```
+
+![Product Recommendations](image-8.png)
+
+Under the hood the bot is sending SQL queries to Couchbase to fetch washing machine product info. 
+
+<br>
+
+Let's ask questions that's trickier than SQL query. 
+
+```
+I bought a washing machine and it's starting to smell really bad recently. What should I do? 
 ```
 
 <br>
 
-Go back to collection main.chats.bots. Note the user_id field is already created. In a RDMNS database, this would be much harder.
+![RAG](image-9.png)
 
 <br>
 
-<img width="635" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/3b5f0ccd-b33e-4f3c-b5fd-b4b39f68846e">
-
-<br>
-
-
->🙌🏻 The query might fail with “index not created” message. In this case, follow Index Advisor to create index and re-run the query
-Easy. This is good time to explain the superiority of NoSQL when fast iteration is required.
-
-<br>
-
+Other than recommending some products, it's actually looking into the product manuals. Semantic Search and RAG is in play here supported by Couchbase Vector Search. 
 
 <br><br>
 
-**2.3.2 SQL JOIN**
-<br>
+Let's try asking some refund queries: 
 
-If customer choose to have a separate vector database, they’ll end up storing vectors, transactions, and SQL docs in separate datastore. Imagine running query that needs joining these disconnected tables. 
-With Couchbase, easy. Go to Query service and run the following query:
 ```
-SELECT p, COUNT(*) AS frequency, pr.product_name
-FROM `main`.`chats`.`bot` AS b
-UNNEST b.product_ids AS p
-JOIN `main`.`data`.`products` AS pr ON KEYS p
-GROUP BY p, pr.product_name
-ORDER BY frequency DESC;
+I bought a washing machine and my order is SO005. It stopped working. I'd like to have a refund please.
 ```
+
+![Invalid Refund Request](image-11.png)
 
 <br>
 
-<img width="981" alt="image" src="https://github.com/sillyjason/chatbot-cb-2/assets/54433200/b2230d51-7897-41e7-bb06-f2677c54cc0b">
+The bot is able to reflect invalid refund request by looking into refund policy. Now what happens if the refund request is valid? 
+
+```
+I bought a vacuum and my order is SO005. It stopped working. I'd like to have a refund please.
+```
+
+<br>
+
+![Valid Refund Request](image-12.png)
+
+<br>
+
+This time the refund request is deemed valid since washing machien and vacuum have different refund period (you can check under **dataset/faq.txt**, which is indexed into Couchbase). The bot even went so far as to create a refund ticket, which can be found under "main"."data"."refund_tickets" collection in Couchbase.
+
+![Refund Tickets Collection](image-13.png)
+
+<br><br>
+
+
+## Beyond the Question Answering
+
+Realistically, the custoemr service process doesn't end with the initial response provided. A common example is follow-ups on the refund ticket. Let's put on the hat of a Refund Manager and look at the valid requests created by the bot. Access the 
+
+
+
+
+
+
+## Traceability 
+
+We all know LLM cannot be fully deterministic at the moment. That is why, if we entrust the reasoning process to a bot, we need to have full visibility on its reasoning process. 
+
+Note how every response from the bot has a "trace" link provided. Let's click the link
+
+![trace](image-14.png)
 
