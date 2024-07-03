@@ -1,23 +1,11 @@
-/*
-This Terraform templates sets up the necessary resources needed to run this Agentic LLM application. 
-
-The app can run either on your local laptop or on a virtual machine you setup (in my case, a AWS VM).
-
-In the default setup, this app runs on your local laptop and only a Couchbase Capella cluster is created. Port Forwarding is needed to forward incoming Couchbase Eventing calls to your local machine. 
-
-In the case where Port Forwarding is not, you can alternatively deploy the app on a VM. In this case, uncomment the AWS resource code code block below to get going. 
-*/
-
-
-
-#aws vm instance for running the chatbot
+# aws provider
 provider "aws" {
     region = "ap-southeast-1"
     access_key = var.access_key
     secret_key = var.secret_key
 }
 
-
+# app node setup
 resource "aws_instance" "app" {
   ami           = "ami-0b287aaaab87c114d"
   instance_type = "t3.2xlarge"
@@ -42,6 +30,7 @@ resource "aws_instance" "app" {
 }
 
 
+# Couchbase node setup
 resource "aws_instance" "cb_server" {
   ami           = "ami-0b287aaaab87c114d"
   instance_type = "t3.2xlarge"
@@ -59,6 +48,8 @@ resource "aws_instance" "cb_server" {
   }
 }
 
+
+# output node hostnames 
 output "cb_instance_public_dns" {
   value = aws_instance.cb_server.public_dns
 }

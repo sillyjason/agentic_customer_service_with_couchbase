@@ -43,7 +43,7 @@ GPT-4o is used in this demo. You need to have an **OPENAI_API_KEY** from [OpenAI
 [LangSmith](https://smith.langchain.com/) is the observability stack for LangChain, and is used for traceability, a crucial component that makes it ever simplier to understand, troubleshoot, and optimize the LLM workflow. We'll also get a **LangChain_API_KEY**.  
 
 
-<br>
+<br><br>
 
 **1.2 VM Deployment**
 <br>
@@ -53,26 +53,28 @@ We will need 2 instances, one to host the app (**the App Node**), and the other 
 
 >🙌🏻 Run either 1.2.1 or 1.2.2 below for nodes creation.
 
-<br>
+<br><br>
 
 **1.2.1 Using Terraform** 
 <br>
 
 If you’re a Terraform user, download the /terraform folders from the root directory of this Github repo. 
 
-Create a variable file terraform.template.tfvars with necessary cloud credentials. I'm using AWS and this is the variables I needed. If you're on another cloud, follow [Terraform documentation](https://registry.terraform.io/) for proper setup:
+Create a variable file **terraform.template.tfvars** with necessary cloud credentials. I'm using AWS and this is the variables I needed. If you're on another cloud, follow [Terraform documentation](https://registry.terraform.io/) for proper setup.
 
 ```
 access_key = 
 secret_key = 
 ```
 
+<br>
+
 Finish the set up of server.tf and run the script. Upon successful node creation you should see these 2 hostnames as output. Note them down. 
 
 
 ![alt text](static/images/image.png)
 
-<br>
+<br><br>
 
 **1.2.2 Using AWS Console** 
 <br>
@@ -108,7 +110,7 @@ sudo systemctl start couchbase-server
 
 By now both App Node and Couchbase Node are successfully created. Let's continue.  
 
-<br>
+<br><br>
 
 **1.3 Couchbase Node Setup**
 <br>
@@ -141,6 +143,7 @@ Unselect "Analytics" and "Backup". Leave the rest unchanged and click "**Save & 
 
 ![Couchbase Service Selection](static/images/image-3.png)
 
+<br><br>
 
 All good! You'll see the empty-ish screen below since we haven't created the data structure or ingested data, which will be via scripted. Now let's proceed with the App Node.
 
@@ -191,7 +194,7 @@ LANGCHAIN_TRACING_V2=true
 LANGCHAIN_API_KEY={langchain_api_key}
 ```
 
-<br>
+<br><br>
 
 Update the Eventing functions endpoints with the hostname of App Node. 
 
@@ -202,7 +205,7 @@ python3 updateips.py
 >🙌🏻 - Eventing is Couchbase's version of Database Trigger and Lambda functions. It's a versatile and powerful tool to stitch together your data processes and achieve high automation.
 
 
-<br>
+<br><br>
 
 Set up bucket/scope/collections, fts index, and update the endpoint for the app: 
 
@@ -212,27 +215,44 @@ python3 setupservers.py
 
 <br>
 
+> ❗️Sometimes the event creation might fail and you would see error message like below:
+```
+Error importing function process_refund_ticket: 400 Client Error: Bad Request for url:xxxx. 
+```
+
+<br>
+
+This could be due to not enough time between bucket and eventing creation. In this case, re-run the command and you'll see the success message: 
+```
+Importing function process_refund_ticket...
+Function process_refund_ticket imported successfully
+Importing function process_message... 
+Function process_message imported successfully
+```
+
+<br><br>
+
 Now let's load some sample data. This includes products, orders, product FAQ, and refund policies. We will see the bot reasoning through the query and interact with the data in the ways deemed fit.
 
 ```
 python3 reindex.py
 ```
 
-<br>
+<br><br>
 
 You should be able to see this success message.
 
 ![alt text](static/images/image-5.png)
 
-<br>
+<br><br>
 
 You can also check the Couchbase console. There should be data in "**orders**", "**products**" and "**policies**" collections under **"main"."data"** keyspace.
 
 ![alt text](static/images/image-6.png)
 
-<br>
+<br><br>
 
-As a last step, let's create some indexes needed for the bot to run queries later. Go to Couchbase console, select Query from the left side menu bar, and run the syntaxes below individually: 
+As a last step, let's create some indexes needed for the bot to run queries later. Go to Couchbase console, select **Query** from the left side menu bar, and run the syntaxes below **individually**: 
 
 ```
 create primary index on `main`.`data`.`policies`
@@ -243,7 +263,7 @@ create primary index on `main`.`data`.`message_responses`
 create primary index on `main`.`data`.`refund_tickets`
 ```
 
-<br>
+<br><br>
 
 >🙌🏻 We're creating primary indexes here which only index the document keys, and this is not a recommended indexing behavior in production environment, where more performant and advanced indexing should be employed instead.
 
@@ -263,7 +283,6 @@ python3 app.py
 
 <br>
 
-
 On your browser, access this link below. You should see the empty chat screen.
 
 > {App_node_hostname}:5001
@@ -271,13 +290,13 @@ On your browser, access this link below. You should see the empty chat screen.
 ![App Welcome Screen](static/images/image-7.png)
 
 
-<br>
+<br><br>
 
 **Ask Product Questions**
 
 <br>
 
-Let's ask some product related questions: 
+Let's ask some **product related** questions: 
 
 ```
 I bought a vacuum and I really liked it! Do you have any washing machines to recommend as well?
@@ -285,9 +304,9 @@ I bought a vacuum and I really liked it! Do you have any washing machines to rec
 
 ![Product Recommendations](static/images/image-8.png)
 
-Under the hood the bot is sending SQL queries to Couchbase to fetch washing machine product info. 
+Under the hood the bot is sending **SQL queries** to Couchbase to fetch washing machine product info. 
 
-<br>
+<br><br><br>
 
 Let's ask questions that's trickier than SQL query. Refresh the page, and ask another question.
 
@@ -299,11 +318,11 @@ I bought a washing machine and it's starting to smell really bad recently. What 
 
 ![RAG](static/images/image-9.png)
 
-<br>
+<br><br>
 
 Other than recommending some products, it's actually looking into the product manuals. Semantic Search and RAG is in play here supported by Couchbase Vector Search. 
 
-<br><br>
+<br><br><br>
 
 Let's refresh the page again, and try asking some refund queries: 
 
@@ -313,7 +332,7 @@ I bought a washing machine and my order is SO005. It stopped working. I'd like t
 
 ![Invalid Refund Request](static/images/image-11.png)
 
-<br>
+<br><br><br>
 
 The bot is able to reflect invalid refund request by looking into refund policy. Now what happens if the refund request is valid? 
 
@@ -325,9 +344,9 @@ I bought a vacuum and my order is SO005. It stopped working. I'd like to have a 
 
 ![Valid Refund Request](static/images/image-20.png)
 
-<br>
+<br><br>
 
-This time the refund request is deemed valid since washing machien and vacuum have different refund period (you can check under **dataset/faq.txt**, which is indexed into Couchbase). Note the bot even created a refund ticket, which can be found under "main"."data"."refund_tickets" collection in Couchbase.
+This time the refund request is deemed valid since washing machine and vacuum have different refund period (you can check under **dataset/faq.txt**, which is indexed into Couchbase). Note the bot even created a refund ticket, which can be found under "main"."data"."refund_tickets" collection in Couchbase.
 
 ![Refund Tickets Collection](static/images/image-13.png)
 
@@ -355,7 +374,7 @@ Go back to main page. Another message is sent to the customer on the good news o
 
 ![alt text](static/images/image-22.png)
 
-<br>
+<br><br>
 
 Let’s go to “Customer Message” tab. 
 
@@ -380,7 +399,7 @@ Note how every response from the bot has a "trace" link provided. Let's click th
 
 ![trace](static/images/image-14.png)
 
-<br>
+<br><br>
 
 With first-time access, you'll be prompted to login. Use the same credentials for which you created the LangChain API key. 
 
@@ -406,5 +425,5 @@ LangSmith is an awesome tool for understanding and troubleshooting the agentic p
 
 Drill into any step during the reasoning chain, look at the input/output. I find it amazing at even optimizing my workflows!
 
-![alt text](image-26.png)
+![alt text](static/images/image-26.png)
 
