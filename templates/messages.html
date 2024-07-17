@@ -33,17 +33,20 @@
         const socket = io();
 
         function createMessageBox(message) {
-            console.log("message.tags.product", message.tags.product)
-            const box = document.createElement('div');
+            console.log("message.tags.product", message)
+
+            var tags = message.tags || {};
+
+            var box = document.createElement('div');
             box.className = 'message-box';
             box.innerHTML = `
                 <p>${message.message}</p>
                 <div style="display: flex; justify-content: space-between;">
-                    ${message.tags.tone ? `<span>Sentiment: ${message.tags.tone === 'positive' ? '😋' : message.tags.tone === 'negative' ? '😡' : '😶'}</span>` : ''}
-                    ${message.tags.product ? `<span>Product: ${message.tags.product}</span>` : ''}
+                    ${tags.tone ? `<span>Sentiment: ${tags.tone === 'positive' ? '😋' : tags.tone === 'negative' ? '😡' : '😶'}</span>` : ''}
+                    ${tags.product ? `<span>Product: ${tags.product}</span>` : ''}
                 </div>
                 <div style="display: flex; justify-content: space-between;">
-                    ${message.tags.type ? `<p>Category: ${message.tags.type}</p>` : ''}
+                    ${tags.type ? `<p>Category: ${tags.type}</p>` : ''}
                     <p>${timeAgo(new Date(message.time))}</p>
                 </div>
                 </div>

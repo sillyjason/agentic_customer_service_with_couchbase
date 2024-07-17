@@ -27,9 +27,7 @@ def parse_message(input_message):
         # Convert Python dictionary format to valid JSON format
         
         json_content = json_content.replace("'", '"').replace("None", "null").replace("False", "false").replace("True", "true")
-        
-        print(f'json_contenttt: {json_content}')
-        
+          
         try:
             json_data = json.loads(json_content)
         except json.JSONDecodeError as e:

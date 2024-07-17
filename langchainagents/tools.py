@@ -18,8 +18,6 @@ def retrieve_order_info(order_id: str) -> dict:
 def get_product_details(product_ids: list) -> dict:
     """retrieve the information of the order provided from the database"""
     
-    print("product_ids", product_ids)
-    
     # for each product id, retrieve the product details from couchbase using the get_doc function
     product_details = []
     for product_id in product_ids:
@@ -69,8 +67,6 @@ def create_refund_ticket(order_id: str, refund_reason: str, message_id: str, cus
 def get_category_products(product_category: str) -> list:
     """retrieve the product information in this category for recommendation back to customer"""
     
-    print("product_category", product_category)
-    
     result = cluster.query(
     f"""
         select * 
@@ -90,8 +86,6 @@ def get_category_products(product_category: str) -> list:
         except Exception as e:
             print(f"An error occurred: {e}")
             
-    print(f'returned_rows: {returned_rows}')
-    
     return returned_rows
 
 
@@ -110,8 +104,6 @@ def get_policies(input: str) -> str:
     # remove all empty spaces and line breaks or "\n" characters in the additional context
     additional_context = additional_context.replace("\n", "")
     
-    print(f"additional_context: {additional_context}")
-
     return additional_context
 
 
@@ -133,17 +125,11 @@ def calculate_refund_eligibility(refund_policies: list, order_date: str) -> dict
     #turn the order_date field, which is a str, into a datetime obj
     date_obj = parser.parse(order_date)
     
-    print(f'date_obj: {date_obj}')
-
     today = datetime.datetime.now()
     
-    print(f"today: {today}")
-
     # Calculate the difference
     difference = today - date_obj
-    print(f"difference: {difference}")
     diff_in_days = difference.days 
-    print(f'diff_in_days: {diff_in_days}')
     
     refund_information["days_since_purchase"] = diff_in_days
     
@@ -153,8 +139,6 @@ def calculate_refund_eligibility(refund_policies: list, order_date: str) -> dict
     for policy in refund_policies:
         days = policy.days_passed
         refund_percentage = policy.refund_percentage
-        
-        print(f"")
         
         # update final_refund_percent to refund_percentage only if days is larger than diff_in_days and that refund_percentage is greater than final_refund_percent
         if days >= diff_in_days and refund_percentage > final_refund_percent:

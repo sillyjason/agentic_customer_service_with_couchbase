@@ -13,6 +13,7 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchainagents.parser import parse_message
 import time 
 from langchain import callbacks
+from sharedfunctions.print import print_success, print_bold
 
 
 # model initialization
@@ -80,7 +81,7 @@ class Agent:
         tool_calls = state['messages'][-1].tool_calls
         results = []
         for t in tool_calls:
-            print(f"Calling: {t}")
+            print_success(f"\n\nBot is calling function: {t}\n\n")
             if not t['name'] in self.tools:      # check for bad tool name from LLM
                 print("\n ....bad tool name....")
                 result = "bad tool name, retry"  # instruct LLM to retry if bad
@@ -98,7 +99,7 @@ class Agent:
                 result = self.tools[tool_name].invoke(function_args)
             
             results.append(ToolMessage(tool_call_id=t['id'], name=t['name'], content=str(result)))
-        print("Back to the model!")
+        print_success("Function call completed. Bot proceeding to the next step...")
         return {'messages': results }   
 
 
@@ -107,6 +108,8 @@ general_tools = [retrieve_order_info, get_product_details]
 general_support_bot = Agent(model, general_tools, system=general_support_prompt)
 
 def general_support_node(state: AgentState):
+    print_bold("\n\nGeneral support agent bot is running...\n\n")
+    
     messages = [
         SystemMessage(content=general_support_prompt), 
         HumanMessage(content=state['message'])
@@ -138,6 +141,8 @@ product_recommendation_tools = [get_category_products]
 product_recommendation_bot = Agent(model, product_recommendation_tools, system=product_recommendation_prompt)
 
 def product_recommendation_node(state: AgentState): 
+    print_bold("\n\nProduct recommendation agent bot is running...\n\n")
+    
     messages = [
         SystemMessage(content=general_support_prompt), 
         HumanMessage(content=state['message'])
@@ -157,6 +162,8 @@ product_fix_tools = [get_policies]
 product_fix_bot = Agent(model, product_fix_tools, system=product_fix_prompt)
 
 def product_fix_node(state: AgentState): 
+    print_bold("\n\nProduct fix agent bot is running...\n\n")
+    
     messages = [
         SystemMessage(content=product_fix_prompt), 
         HumanMessage(content=state['message'])
@@ -176,6 +183,7 @@ refund_tools = [get_policies, calculate_refund_eligibility]
 refund_bot = Agent(model, refund_tools, system=refund_policy_prompt)
 
 def refund_node(state: AgentState): 
+    print_bold("\n\nRefund agent bot is running...\n\n")
     
     messages = [
         SystemMessage(content=refund_policy_prompt), 
@@ -207,6 +215,7 @@ finalizer_tools = [create_refund_ticket]
 finalizer_bot = Agent(model, finalizer_tools, system=content_finalizer_prompt)
 
 def content_finalizer_node(state: AgentState):
+    print_bold("\n\nFinalization agent is consolidating and working on final response...\n\n")
       
     draft = state.get("") or ""
     message = state.get("message") or ""

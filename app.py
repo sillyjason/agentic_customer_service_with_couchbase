@@ -5,6 +5,7 @@ import datetime
 from couchbaseops import insert_doc, run_query, mutliple_subdoc_upsert, mutliple_subdoc_upsert
 from langchainagents.metadata_tag import tag_metadata
 from langchainsetup import run_agent_langgraph
+from sharedfunctions.print import print_error
 
 
 load_dotenv()
@@ -20,7 +21,7 @@ def index():
 
 @socketio.on('message')
 def handle_message(msg_to_process):
-    print(f'message: {msg_to_process}')
+    print_error(f'\n\nNew customer message! "{msg_to_process}"\n\n')
     
     # insert into message collection 
     doc_to_insert = msg_to_process
@@ -32,7 +33,6 @@ def handle_message(msg_to_process):
     response, run_id, run_url = run_agent_langgraph(msg_to_process['message'])
     final_reply = response['final_response']
     
-    print(f'aaa, run_id: {run_id}, run_url: {run_url}, final_reply: {final_reply}')
     run_id = str(run_id)
     
     # insert into message_response collection
@@ -95,8 +95,6 @@ def receive_reply():
 
 @app.route('/new_refund_ticket_notification', methods=['POST'])
 def new_refund_ticket_notification():
-    print('new_refund_ticket_notification')
-    
     socketio.emit("new_refund_ticket_creation")
     
     return { "status": "success" }
@@ -123,7 +121,7 @@ def init_messages():
     
     results = []
     for row in result: 
-        print('found row')
+        print(f'found row: {row}')
         results.append(row)
         emit('new_messages', results)
     
@@ -141,7 +139,6 @@ def init_refund_tickets():
     
     results = []
     for row in result: 
-        print('found row')
         results.append(row)
         emit('new_tickets', results)
     
@@ -150,8 +147,6 @@ def init_refund_tickets():
 
 @socketio.on('approve_refund_ticket')
 def approve_refund_ticket(data):
-
-    print("approve_refund_ticket: ", data)
     refund_amount = data.get('refund_amount')
     refund_ticket_id = data.get('refund_ticket_id')
     

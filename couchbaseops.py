@@ -21,7 +21,7 @@ cluster.wait_until_ready(timedelta(seconds=5))
 print("Couchbase setup complete")
 
 
-#C CRUD operations
+# CRUD operations
 def get_doc(bucket, scope, collection, doc_id):
     collection = cluster.bucket(bucket).scope(scope).collection(collection)
     

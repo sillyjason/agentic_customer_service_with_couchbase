@@ -2,11 +2,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Agentic Customer Support with Couchbase</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
-       
+        .top-right-links {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 20px;
+        }
+
+        .top-right-links a {
+            text-decoration: none;
+            color: #007bff; /* Bootstrap primary color for reference */
+            margin-left: 10px;
+        }
+
+        .top-right-links a:first-child {
+            margin-left: 0;
+        }
         body {
             display: flex;
             flex-direction: column;
@@ -35,28 +47,20 @@
             max-height: calc(100vh - 200px); /* Adjust this value as needed */
             overflow-y: auto;
         }
+
+        #message-input {
+            width: 94%;
+            margin-right: 10px;
+        }
         
         .user-message {
-            text-align: right;
-            background-color: beige;
-            border-radius: 10px;
-            padding: 5px 10px;
-            margin-bottom: 10px;
-            width: 50%;
-            align-self: flex-end;
-            margin-left: auto; /* Added */
-            font-family: Monospace;
+            background-color: white;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); /* Slight glow effect */
         }
         
         .system-message {
-            text-align: left;
-            background-color: lightblue; /* Updated */
-            border-radius: 10px;
-            padding: 5px 10px;
-            margin-bottom: 10px;
-            width: 50%;
-            align-self: flex-start; /* Updated */
-            font-family: Monospace;
+            background-color: beige;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); /* Slight glow effect */
         }
 
         #message-container {
@@ -68,29 +72,74 @@
             right: 5%;
             width: 90%;
         }
+
+        .title {
+            font-weight: bold;
+            font-size: large;
+            margin-bottom: 5px;
+        }
         
-        #message {
-            flex: 1;
-            padding: 5px;
-            margin-right: 10px;
-            font-family: Monospace;
+        .message {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px;
         }
         
         #send {
             padding: 5px 10px;
             font-family: Monospace;
         }
+
+        .circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 14px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .user-message .circle {
+            background-color: gray;
+        }
+        .system-message .circle {
+            background-color: purple;
+        }
+        .content {
+            flex-grow: 1;
+            width: 80%;
+        }
+        .timestamp {
+            margin-left: 10px;
+        }
+
+        #send {
+            font-size: 30px; /* Increase the size of the emoji */
+            border: none; /* Remove the default border */
+            background-color: lightblue; /* Light grey background */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            border-radius: 5px; /* Optional: round the corners of the button */
+            width: 5%
+        }
     </style>
 </head>
 <body>
-    <div id="header">Agentic Customer Support with Couchbase</div>
+    <div class="top-right-links">
+        <a href="http://localhost:5001/tickets">Tickets</a>
+        <a href="http://localhost:5001/messages">Messages</a>
+    </div>
+    <div id="header">🚀🧠🤖 Agentic Customer Support with Couchbase 🤖🧠🚀</div>
     <div id="chatbox"> </div>
     <div id="message-container">
-        <input id="message" type="text" onkeydown="if(event.keyCode===13) document.getElementById('send').click()"> <!-- Updated -->
-        <button id="send">Send</button>
+        <input id="message-input" type="text" onkeydown="if(event.keyCode===13) document.getElementById('send').click()"> <!-- Updated -->
+        <button id="send">✉️</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         var socket = io.connect('http://localhost:5001');
         var lastTimestamp = null;
@@ -99,7 +148,19 @@
             console.log("received response,", msg)
             const { message, run_id, run_url } = msg;
 
-            $('#chatbox').append($('<p class="system-message"></p>').html(message.replace(/\n/g, '<br>')));
+            // $('#chatbox').append($('<p class="system-message"></p>').html(message.replace(/\n/g, '<br>')));
+
+            const systemMessageHtml = `
+                <div class="message system-message">
+                    <div class="circle">CS</div>
+                    <div class="content">
+                        <div class="title">customer_support@greataicompany.io, Jason</div>
+                        <div>${message.replace(/\n/g, '<br>')}</div>
+                    </div>
+                    <div class="timestamp">Just Now</div>
+                </div>
+            `;
+            $('#chatbox').append(systemMessageHtml);
 
             // add a text: "Trace: {run_id}" where run_id is a link to the run_url. the text should be clickable and the style is blue and underlined
             if (run_id && run_url) {
@@ -110,12 +171,25 @@
         
         $('#send').click(function() {
             //send message to server
-            var message = $('#message').val();
-            $('#message').val('');
-            $('#chatbox').append('<p class="user-message">' + message + '</p>');
+            var message = $('#message-input').val();
+            $('#message-input').val('');
+            // $('#chatbox').append('<p class="user-message">' + message + '</p>');
          
-            socket.emit('message', {message: message});
+            const userMessageHtml = `
+                <div class="message user-message">
+                    <div class="circle">C</div>
+                    <div class="content">
+                        <div class="title">Jason, customer_support@greataicompany.io</div>
+                        <div>${message}</div>
+                    </div>
+                    <div class="timestamp">Just Now</div>
+                </div>
+            `;
+
+            $('#chatbox').append(userMessageHtml);
             $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+            
+            socket.emit('message', {message: message});
         });
     </script>
 </body>

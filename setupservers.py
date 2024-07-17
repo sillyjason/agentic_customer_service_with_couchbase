@@ -5,6 +5,7 @@ from requests.auth import HTTPBasicAuth
 import json 
 import re
 from couchbaseops import run_query
+from sharedfunctions.print import print_success, print_error
 
 load_dotenv()
 
@@ -37,11 +38,11 @@ def create_bucket(bucket_name, ram_quota):
 
     success_code = 202
     if response.status_code == success_code:
-        print(f"Created bucket '{bucket_name}'")
+        print_success(f"Created bucket '{bucket_name}'")
         return True
     
     else:
-        print(f"Error creating bucket {bucket_name}: {response.text}")
+        print_error(f"Error creating bucket {bucket_name}: {response.text}")
         return None
 
 def create_scope(scope_name, bucket_name):
@@ -49,10 +50,10 @@ def create_scope(scope_name, bucket_name):
     response = requests.post(url, auth=HTTPBasicAuth(os.getenv("CB_USERNAME"), os.getenv("CB_PASSWORD")), data={"name": scope_name})
     success_code = 200
     if response.status_code == success_code:
-        print(f"Created scope '{bucket_name}.{scope_name}'")
+        print_success(f"Created scope '{bucket_name}.{scope_name}'")
         return True
     else:
-        print(f"Error creating scope {scope_name}: {response.text}")
+        print_error(f"Error creating scope {scope_name}: {response.text}")
         return False
 
 def create_collection(bucket_name, scope_name, collection_name):
@@ -61,10 +62,10 @@ def create_collection(bucket_name, scope_name, collection_name):
  
     success_code = 200
     if response.status_code == success_code:
-        print(f"Created collection '{bucket_name}.{scope_name}.{collection_name}'")
+        print_success(f"Created collection '{bucket_name}.{scope_name}.{collection_name}'")
         return True
     else:
-        print(f"Error creating colletion {collection_name}: {response.text}")
+        print_error(f"Error creating colletion {collection_name}: {response.text}")
         return False
 
 
@@ -85,7 +86,7 @@ if BUCKET_MAIN_ID is not None:
         create_collection("main", "data", "products")
         create_collection("main", "data", "refund_tickets")
     
-print("Done setting up data structures..")
+print_success("Done setting up data structures..")
 
 
 
@@ -100,10 +101,10 @@ try:
     with open(index_file, 'w') as file:
         file.write(updated_content)
     
-    print("Endpoint updated successfully in index.html")
+    print_success("Endpoint updated successfully in index.html")
     
 except Exception as e:
-    print(f"Error updating endpoint in index.html: {str(e)}")
+    print_error(f"Error updating endpoint in index.html: {str(e)}")
 
 
 
@@ -124,10 +125,10 @@ def import_function(function_name):
         response = requests.post(url, json=data, auth=(CB_USERNAME, CB_PASSWORD))
         response.raise_for_status()
 
-        print(f"Function {function_name} imported successfully")
+        print_success(f"Function {function_name} imported successfully")
     
     except Exception as e:
-        print(f"Error importing function {function_name}: {str(e)}")
+        print_error(f"Error importing function {function_name}: {str(e)}")
 
 import_function("process_refund_ticket")
 import_function("process_message")
@@ -142,10 +143,10 @@ def import_fts_index():
         with open(f'./static/fts-index.json', 'r') as file:
             data = json.load(file)
             requests.put(url, auth=(CB_USERNAME, CB_PASSWORD), json=data)
-            print('fts index imported successfully') 
+            print_success('fts index imported successfully') 
 
     except Exception as e:
-        print(f"Error importing fts index: {str(e)}")
+        print_error(f"Error importing fts index: {str(e)}")
 
 import_fts_index()
 
@@ -163,4 +164,4 @@ import_fts_index()
 # create_primary_index("main", "data", "refund_tickets")
 
 
-print("setup complete.")
+print_success("setup complete.")

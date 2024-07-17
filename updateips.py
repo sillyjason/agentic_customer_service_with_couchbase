@@ -1,6 +1,7 @@
 import json
 import os
 from dotenv import load_dotenv
+from sharedfunctions.print import print_success
 
 load_dotenv()
 
@@ -21,4 +22,4 @@ def update_json_file(file_path):
 update_json_file('process_message.json')
 update_json_file('process_refund_ticket.json')
 
-print(f"Updated Eventing JSON files with IP address: {APP_NODE_HOSTNAME}")
+print_success(f"Updated Eventing JSON files with IP address: {APP_NODE_HOSTNAME}")
