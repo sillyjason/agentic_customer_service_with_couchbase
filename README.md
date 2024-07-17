@@ -288,7 +288,8 @@ On your browser, access this link below. You should see the empty chat screen.
 
 > {App_node_hostname}:5001
 
-![App Welcome Screen](static/images/image-7.png)
+![image](https://github.com/user-attachments/assets/8eece557-94dd-411c-be39-86e5d9899380)
+
 
 
 <br><br>
@@ -346,7 +347,8 @@ I bought a vacuum and my order is SO005. It stopped working. I'd like to have a 
 
 <br>
 
-![Valid Refund Request](static/images/image-20.png)
+![image](https://github.com/user-attachments/assets/b7a6cb7a-9dee-4b65-9429-722d98346f7f)
+
 
 <br><br>
 
@@ -376,7 +378,8 @@ You’ll see a success message. Refresh the page. The update is reflected.
 Go back to main page. Another message is sent to the customer on the good news of the refund ticket. Again, [Couchbase Eventing](https://www.couchbase.com/products/eventing/) doing its real time process stitching. 
 
 
-![alt text](static/images/image-22.png)
+![image](https://github.com/user-attachments/assets/5bef29ad-954d-4d47-877e-3daf70e0b84c)
+
 
 <br><br>
 
@@ -401,7 +404,8 @@ Note how every response from the bot has a "trace" link provided. Let's click th
 
 <br>
 
-![trace](static/images/image-14.png)
+![image](https://github.com/user-attachments/assets/40a0d263-c74c-4070-aa96-99421f90ed22)
+
 
 <br><br>
 
