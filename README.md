@@ -13,7 +13,8 @@ Meanwhile, customer support may well extend beyond question-answering pattern. W
 At a high level, this is what happens: 
 
 
-![Alt text for the image](static/images/architecture.png)
+![image](https://github.com/sillyjason/agentic_customer_service_with_couchbase/assets/54433200/ea02047c-973e-4648-a1b0-5be85acd17b2)
+
 
 <br>
 
