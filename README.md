@@ -303,7 +303,8 @@ Let's ask some **product related** questions:
 I bought a vacuum and I really liked it! Do you have any washing machines to recommend as well?
 ```
 
-![Product Recommendations](static/images/image-8.png)
+![image](https://github.com/user-attachments/assets/db9e2dac-6f28-45f8-93f2-95de1bf2c9d5)
+
 
 Under the hood the bot is sending **SQL queries** to Couchbase to fetch washing machine product info. 
 
@@ -317,7 +318,8 @@ I bought a washing machine and it's starting to smell really bad recently. What 
 
 <br>
 
-![RAG](static/images/image-9.png)
+![image](https://github.com/user-attachments/assets/568819a3-b117-4de3-b58b-3a9207b13b76)
+
 
 <br><br>
 
@@ -331,11 +333,12 @@ Let's refresh the page again, and try asking some refund queries:
 I bought a washing machine and my order is SO005. It stopped working. I'd like to have a refund please.
 ```
 
-![Invalid Refund Request](static/images/image-11.png)
+![image](https://github.com/user-attachments/assets/f486be99-cd08-4648-9a5d-46a6955060fb)
+
 
 <br><br><br>
 
-The bot is able to reflect invalid refund request by looking into refund policy. Now what happens if the refund request is valid? 
+The bot is able to deflect invalid refund requests by looking into refund policy, doing some maths and making a sound judgement calls. Now what happens if the refund request is valid? 
 
 ```
 I bought a vacuum and my order is SO005. It stopped working. I'd like to have a refund please.
