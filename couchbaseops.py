@@ -147,7 +147,7 @@ def mutliple_subdoc_upsert(bucket, scope, collection, doc_id, path_value_dict):
 
 def run_query(query):
     try:
-        result = cluster.query(query)
+        result = cluster.query(query).execute()
         print(f"Query successful: {query}, result: {result}")
         return result
         
