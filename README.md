@@ -251,18 +251,6 @@ You can also check the Couchbase console. There should be data in "**orders**", 
 
 ![alt text](static/images/image-6.png)
 
-<br><br>
-
-As a last step, let's create some indexes needed for the bot to run queries later. Go to Couchbase console, select **Query** from the left side menu bar, and run the syntaxes below **individually**: 
-
-```
-create primary index on `main`.`data`.`policies`
-create primary index on `main`.`data`.`products`
-create primary index on `main`.`data`.`orders`
-create primary index on `main`.`data`.`messages`
-create primary index on `main`.`data`.`message_responses`
-create primary index on `main`.`data`.`refund_tickets`
-```
 
 <br><br>
 
