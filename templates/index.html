@@ -128,8 +128,8 @@
 </head>
 <body>
     <div class="top-right-links">
-        <a href="http://ec2-52-77-253-31.ap-southeast-1.compute.amazonaws.com:5001/tickets">Tickets</a>
-        <a href="http://ec2-52-77-253-31.ap-southeast-1.compute.amazonaws.com:5001/messages">Messages</a>
+        <a href="http://localhost:5001/tickets">Tickets</a>
+        <a href="http://localhost:5001/messages">Messages</a>
     </div>
     <div id="header">🚀🧠🤖 Agentic Customer Support with Couchbase 🤖🧠🚀</div>
     <div id="chatbox"> </div>
@@ -141,7 +141,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-        var socket = io.connect('http://ec2-52-77-253-31.ap-southeast-1.compute.amazonaws.com:5001');
+        var socket = io.connect('http://localhost:5001');
         var lastTimestamp = null;
 
         socket.on('response', function(msg) {
