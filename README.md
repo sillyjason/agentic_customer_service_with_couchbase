@@ -254,10 +254,6 @@ You can also check the Couchbase console. There should be data in "**orders**", 
 
 <br><br>
 
->🙌🏻 We're creating primary indexes here which only index the document keys, and this is not a recommended indexing behavior in production environment, where more performant and advanced indexing should be employed instead.
-
-<br><br>
-
 All good. Let's go 
 
 ```
